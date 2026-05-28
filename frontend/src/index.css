@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --fin-bg: #080c14;
+    --fin-surface: #0d1421;
+    --fin-card: #111827;
+    --fin-border: #1f2937;
+    --fin-green: #10b981;
+    --fin-red: #ef4444;
+    --fin-blue: #3b82f6;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    @apply bg-fin-bg text-fin-text-primary;
+    font-family: 'Outfit', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: #080c14; }
+  ::-webkit-scrollbar-thumb { background: #1f2937; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+  /* Number font */
+  .font-num {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Price change colors */
+  .text-gain { color: #10b981; }
+  .text-loss { color: #ef4444; }
+  .bg-gain { background-color: rgba(16, 185, 129, 0.1); }
+  .bg-loss { background-color: rgba(239, 68, 68, 0.1); }
+}
+
+@layer components {
+  .fin-card {
+    @apply bg-fin-card border border-fin-border rounded-xl;
+  }
+
+  .fin-input {
+    @apply bg-fin-surface border border-fin-border text-fin-text-primary placeholder-fin-text-secondary
+           rounded-lg px-4 py-2.5 text-sm outline-none
+           focus:border-fin-blue focus:ring-1 focus:ring-fin-blue transition-all;
+  }
+
+  .fin-btn-primary {
+    @apply bg-fin-blue hover:bg-blue-600 text-white font-semibold
+           px-5 py-2.5 rounded-lg transition-all duration-200
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .fin-btn-ghost {
+    @apply bg-transparent hover:bg-fin-muted text-fin-text-secondary hover:text-fin-text-primary
+           font-medium px-4 py-2 rounded-lg transition-all duration-200;
+  }
+
+  .fin-badge-gain {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold font-num
+           bg-emerald-950 text-fin-green;
+  }
+
+  .fin-badge-loss {
+    @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold font-num
+           bg-red-950 text-fin-red;
+  }
+
+  .fin-sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-fin-text-secondary
+           hover:bg-fin-muted hover:text-fin-text-primary transition-all duration-150 cursor-pointer;
+  }
+
+  .fin-sidebar-item.active {
+    @apply bg-fin-blue/10 text-fin-blue border-l-2 border-fin-blue;
+  }
+}
+
+/* Recharts custom styles */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: #1f2937 !important;
+}
+
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background-color: #0d1421 !important;
+  border-color: #1f2937 !important;
+  color: #f1f5f9 !important;
+  border-radius: 8px !important;
+}
+
+/* Loading shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #111827 25%, #1f2937 50%, #111827 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}

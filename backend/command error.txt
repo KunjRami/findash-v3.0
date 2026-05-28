@@ -1,0 +1,7 @@
+USe this to start Virtual env.....
+ >>> .\venv\Scripts\Activate.ps1
+ 
+ If got error like this -> cannot be loaded because running scripts is disabled on this system.
+ Use this command and rerun venv command
+
+>>> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
