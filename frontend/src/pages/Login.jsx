@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, LineChart, Lock, Mail, ArrowRight } from "lucide-react";
-import useAuthStore from "@/store/authStore";
-import { useRedirectIfAuthed } from "@/hooks/useAuth";
+import useAuthStore from "../store/authStore";
+import { useRedirectIfAuthed } from "../hooks/useAuth";
 
 export default function Login() {
+  console.log("LOGIN COMPONENT RENDER");
   useRedirectIfAuthed();
 
   const [form, setForm]         = useState({ email: "", password: "" });
@@ -36,6 +37,9 @@ export default function Login() {
     const result = await login(form.email, form.password);
     if (result.success) navigate("/", { replace: true });
   };
+
+  console.log("EMAIL:", form.email);  
+
 
   return (
     <div className="min-h-screen bg-fin-bg flex">

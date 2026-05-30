@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Menu, X, Bell } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { stocksAPI } from "@/services/api";
-import { cleanSymbol } from "@/utils/formatters";
+import { stocksAPI } from "../../services/api";
+import { cleanSymbol } from "../../utils/formatters";
 
 export default function Navbar({ onMenuClick }) {
   const [query, setQuery] = useState("");

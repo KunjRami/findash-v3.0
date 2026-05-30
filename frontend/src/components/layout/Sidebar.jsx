@@ -8,7 +8,7 @@ import {
   LogOut,
   LineChart,
 } from "lucide-react";
-import useAuthStore from "@/store/authStore";
+import useAuthStore from "../../store/authStore";
 
 const NAV_ITEMS = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },

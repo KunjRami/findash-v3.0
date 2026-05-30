@@ -5,13 +5,13 @@ import { Component, Suspense, lazy } from "react";
 import Layout from "@/components/layout/Layout";
 
 // Pages (lazy-loaded for code splitting)
-const Login      = lazy(() => import("../pages/Login"));
-const Register   = lazy(() => import("../pages/Register"));
-const Dashboard  = lazy(() => import("../pages/Dashboard"));
-const Portfolio  = lazy(() => import("../pages/Portfolio"));
-const Watchlist  = lazy(() => import("../pages/Watchlist"));
-const StockDetail = lazy(() => import("../pages/StockDetail"));
-const NotFound   = lazy(() => import("../pages/NotFound"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const Portfolio = lazy(() => import("./pages/Portfolio"));
+const Watchlist = lazy(() => import("./pages/Watchlist"));
+const StockDetail = lazy(() => import("./pages/StockDetail"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // ─── Global Error Boundary ───────────────────────────────────────────────────
 class ErrorBoundary extends Component {

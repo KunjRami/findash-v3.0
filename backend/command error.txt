@@ -1,3 +1,6 @@
+To crete Venv.
+>>> python -m venv .venv
+
 USe this to start Virtual env.....
  >>> .\venv\Scripts\Activate.ps1
  

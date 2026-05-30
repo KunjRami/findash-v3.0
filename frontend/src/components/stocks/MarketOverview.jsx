@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { TrendingUp, TrendingDown, RefreshCw } from "lucide-react";
-import { stocksAPI } from "@/services/api";
-import { formatNumber, formatChange, changeClass } from "@/utils/formatters";
-import { Skeleton } from "@/components/ui";
+import { stocksAPI } from "../../services/api";
+import { formatNumber, formatChange, changeClass } from "../../utils/formatters";
+import { Skeleton } from "../ui";
 
 function IndexCard({ data, delay = 0 }) {
   if (!data) return <Skeleton className="h-28" />;

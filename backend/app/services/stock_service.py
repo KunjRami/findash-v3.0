@@ -4,6 +4,7 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 from typing import Dict, List, Any, Optional
 from app.services.technical_analysis import prepare_technical_data
+from fastapi import HTTPException
 
 executor = ThreadPoolExecutor(max_workers=10)
 
@@ -155,9 +156,13 @@ def _fetch_stock_detail(symbol: str, period: str) -> Dict:
             "avg_volume": info.get("averageVolume"),
             "technical_data": technical,
         }
-    except Exception as e:
-        return {"error": str(e)}
+    
 
+    except Exception as e:
+        raise HTTPException(
+            status_code=503,
+            detail=f"Stock provider unavailable: {str(e)}"
+    )
 
 def _fetch_current_price(symbol: str) -> Optional[float]:
     try:
@@ -170,22 +175,22 @@ def _fetch_current_price(symbol: str) -> Optional[float]:
 # ─── Async public API ──────────────────────────────────────────────────────────
 async def get_market_indices() -> Dict:
     loop = asyncio.get_event_loop()
-    # nifty, sensex, bank_nifty = await asyncio.gather(
-    #     loop.run_in_executor(executor, _fetch_index, "^NSEI", "NIFTY 50"),
-    #     loop.run_in_executor(executor, _fetch_index, "^BSESN", "SENSEX"),
-    #     loop.run_in_executor(executor, _fetch_index, "^NSEBANK", "BANK NIFTY"),
-    # )
-    # return {"nifty": nifty, "sensex": sensex, "bank_nifty": bank_nifty}
-    stock1, stock2, stock3 = await asyncio.gather(
-        loop.run_in_executor(executor, _fetch_index, "RELIANCE.NS", "Reliance"),
-        loop.run_in_executor(executor, _fetch_index, "TCS.NS", "TCS"),
-        loop.run_in_executor(executor, _fetch_index, "HDFCBANK.NS", "HDFC Bank"),
+    nifty, sensex, bank_nifty = await asyncio.gather(
+        loop.run_in_executor(executor, _fetch_index, "^NSEI", "NIFTY 50"),
+        loop.run_in_executor(executor, _fetch_index, "^BSESN", "SENSEX"),
+        loop.run_in_executor(executor, _fetch_index, "^NSEBANK", "BANK NIFTY"),
     )
-    return {
-        "stock1": stock1,
-        "stock2": stock2,
-        "stock3": stock3,
-    }
+    return {"nifty": nifty, "sensex": sensex, "bank_nifty": bank_nifty}
+    # stock1, stock2, stock3 = await asyncio.gather(
+    #     loop.run_in_executor(executor, _fetch_index, "RELIANCE.NS", "Reliance"),
+    #     loop.run_in_executor(executor, _fetch_index, "TCS.NS", "TCS"),
+    #     loop.run_in_executor(executor, _fetch_index, "HDFCBANK.NS", "HDFC Bank"),
+    # )
+    # return {
+    #     "stock1": stock1,
+    #     "stock2": stock2,
+    #     "stock3": stock3,
+    # }
 
 async def get_top_movers() -> Dict:
     loop = asyncio.get_event_loop()

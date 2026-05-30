@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, LineChart, User, Mail, Lock, ArrowRight, CheckCircle2 } from "lucide-react";
-import useAuthStore from "@/store/authStore";
-import { useRedirectIfAuthed } from "@/hooks/useAuth";
+import useAuthStore from "../store/authStore";
+import { useRedirectIfAuthed } from "../hooks/useAuth";
 
 const STRENGTH_LABELS = ["", "Weak", "Fair", "Good", "Strong"];
 const STRENGTH_COLORS = ["", "bg-fin-red", "bg-yellow-500", "bg-fin-yellow", "bg-fin-green"];
@@ -17,8 +17,57 @@ function passwordStrength(pw) {
   return score;
 }
 
+function Field({
+  id,
+  label,
+  type = "text",
+  placeholder,
+  icon: Icon,
+  fieldName,
+  value,
+  onChange,
+  error,
+  right,
+}) {
+  return (
+    <div className="space-y-1.5">
+      <label className="text-sm font-medium text-fin-text-secondary">
+        {label}
+      </label>
+
+      <div className="relative">
+        {Icon && (
+          <Icon
+            size={15}
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-fin-text-secondary"
+          />
+        )}
+
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          className={`fin-input ${Icon ? "pl-9" : "pl-4"} ${
+            right ? "pr-10" : ""
+          } w-full ${error ? "border-fin-red" : ""}`}
+        />
+
+        {right}
+      </div>
+
+      {error && (
+        <p className="text-xs text-fin-red">
+          ⚠ {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function Register() {
-  useRedirectIfAuthed();
+  // useRedirectIfAuthed();
 
   const [form, setForm] = useState({
     username: "", email: "", password: "", confirm: "", full_name: "",
@@ -43,12 +92,14 @@ export default function Register() {
     return e;
   };
 
-  const handleChange = (field) => (ev) => {
-    setForm((p) => ({ ...p, [field]: ev.target.value }));
-    if (errors[field]) setErrors((p) => ({ ...p, [field]: "" }));
-    if (error)         clearError();
-  };
+  const handleChange = (field) => (e) => {
+  const value = e.target.value;
 
+  setForm((prev) => ({
+    ...prev,
+    [field]: value,
+  }));
+};
   const handleSubmit = async (e) => {
     e.preventDefault();
     const errs = validate();
@@ -62,33 +113,7 @@ export default function Register() {
     if (result.success) navigate("/", { replace: true });
   };
 
-  const Field = ({ id, label, type = "text", placeholder, icon: Icon, fieldName, right }) => (
-    <div className="space-y-1.5">
-      <label className="text-sm font-medium text-fin-text-secondary">{label}</label>
-      <div className="relative">
-        {Icon && (
-          <Icon size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-fin-text-secondary" />
-        )}
-        <input
-          id={id}
-          type={type}
-          value={form[fieldName]}
-          onChange={handleChange(fieldName)}
-          placeholder={placeholder}
-          className={`fin-input ${Icon ? "pl-9" : "pl-4"} ${right ? "pr-10" : ""} w-full ${
-            errors[fieldName] ? "border-fin-red" : ""
-          }`}
-        />
-        {right}
-      </div>
-      {errors[fieldName] && (
-        <p className="text-xs text-fin-red flex items-center gap-1">
-          <span>⚠</span> {errors[fieldName]}
-        </p>
-      )}
-    </div>
-  );
-
+  
   return (
     <div className="min-h-screen bg-fin-bg flex">
       {/* Left branding */}
@@ -125,22 +150,19 @@ export default function Register() {
           </motion.h1>
           <div className="space-y-3">
             {[
-              "Real-time NIFTY & SENSEX quotes",
-              "Portfolio P&L with live prices",
-              "RSI, MACD & Bollinger Bands",
-              "Personalised watchlist",
-            ].map((feature, i) => (
-              <motion.div
-                key={feature}
-                initial={{ opacity: 0, x: -12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 + i * 0.08 }}
-                className="flex items-center gap-2 text-sm text-fin-text-secondary"
-              >
-                <CheckCircle2 size={14} className="text-fin-green shrink-0" />
-                {feature}
-              </motion.div>
-            ))}
+  "Real-time NIFTY & SENSEX quotes",
+  "Portfolio P&L with live prices",
+  "RSI, MACD & Bollinger Bands",
+  "Personalised watchlist",
+].map((feature, i) => (
+  <div
+    key={feature}
+    className="flex items-center gap-2 text-sm text-fin-text-secondary"
+  >
+    <CheckCircle2 size={14} className="text-fin-green shrink-0" />
+    {feature}
+  </div>
+))}
           </div>
         </div>
 
@@ -187,29 +209,49 @@ export default function Register() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Full name */}
-            <Field
-              fieldName="full_name"
-              label="Full Name (optional)"
-              placeholder="Raj Sharma"
-              icon={User}
-            />
+           <Field
+  label="Full Name (optional)"
+  placeholder="Raj Sharma"
+  icon={User}
+  value={form.full_name}
+  onChange={handleChange("full_name")}
+  error={errors.full_name}
+/>
+            {/* <input
+  type="text"
+  value={form.full_name}
+  onChange={(e) =>
+    setForm((prev) => ({
+      ...prev,
+      full_name: e.target.value,
+    }))
+  }
+/> */}
 
             {/* Username */}
             <Field
-              fieldName="username"
-              label="Username *"
-              placeholder="rajsharma"
-              icon={User}
-            />
+  label="Username *"
+  placeholder="rajsharma"
+  icon={User}
+  value={form.username}
+  onChange={handleChange("username")}
+  error={errors.username}
+/>
+            {/* <input
+  value={form.username}
+  onChange={handleChange("username")}
+/> */}
 
             {/* Email */}
             <Field
-              fieldName="email"
-              label="Email *"
-              type="email"
-              placeholder="you@example.com"
-              icon={Mail}
-            />
+  label="Email *"
+  type="email"
+  placeholder="you@example.com"
+  icon={Mail}
+  value={form.email}
+  onChange={handleChange("email")}
+  error={errors.email}
+/>
 
             {/* Password */}
             <div className="space-y-1.5">
@@ -262,12 +304,14 @@ export default function Register() {
 
             {/* Confirm */}
             <Field
-              fieldName="confirm"
-              label="Confirm Password *"
-              type="password"
-              placeholder="••••••••"
-              icon={Lock}
-            />
+  label="Confirm Password *"
+  type="password"
+  placeholder="••••••••"
+  icon={Lock}
+  value={form.confirm}
+  onChange={handleChange("confirm")}
+  error={errors.confirm}
+/>
 
             <button
               type="submit"
