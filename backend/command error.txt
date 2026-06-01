@@ -1,8 +1,10 @@
 To crete Venv.
 >>> python -m venv .venv
 
-USe this to start Virtual env.....
- >>> .\venv\Scripts\Activate.ps1
+USe this to start Virtual env..... inside backend
+ >>> cd backend
+
+ >>> .venv\Scripts\Activate.ps1
  
  If got error like this -> cannot be loaded because running scripts is disabled on this system.
  Use this command and rerun venv command

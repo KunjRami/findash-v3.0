@@ -3,7 +3,7 @@ from functools import lru_cache
 
 
 class Settings(BaseSettings):
-    MONGODB_URL: str = "mongodb://127.0.0.1:50561/?directConnection=true"
+    MONGODB_URL: str = "mongodb://localhost:27017"
     DATABASE_NAME: str = "findash"
     SECRET_KEY: str = "KunjRami@2005"
     ALGORITHM: str = "HS256"

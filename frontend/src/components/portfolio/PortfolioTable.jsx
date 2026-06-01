@@ -4,97 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Trash2, TrendingUp, TrendingDown, X, ChevronUp, ChevronDown } from "lucide-react";
 import usePortfolioStore from "../../store/portfolioStore";
 import { formatCurrency, cleanSymbol } from "../../utils/formatters";
+import AddHoldingModal from "./AddHoldingModal";
 
-/* ── Add Holding Modal ─────────────────────────────────────────── */
-function AddModal({ onClose }) {
-  const addItem = usePortfolioStore((s) => s.addItem);
-  const [form, setForm] = useState({
-    symbol: "", company_name: "", quantity: "", buy_price: "", buy_date: "",
-  });
-  const [submitting, setSubmitting] = useState(false);
-  const [err, setErr] = useState("");
-
-  const set = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
-
-  const handleAdd = async () => {
-    if (!form.symbol || !form.company_name || !form.quantity || !form.buy_price) {
-      setErr("Symbol, name, quantity and buy price are required.");
-      return;
-    }
-    setSubmitting(true);
-    setErr("");
-    const result = await addItem({
-      symbol: form.symbol.toUpperCase().includes(".") ? form.symbol.toUpperCase() : `${form.symbol.toUpperCase()}.NS`,
-      company_name: form.company_name,
-      quantity: parseFloat(form.quantity),
-      buy_price: parseFloat(form.buy_price),
-      buy_date: form.buy_date || undefined,
-    });
-    setSubmitting(false);
-    if (result.success) onClose();
-    else setErr(result.error || "Failed to add holding.");
-  };
-
-  const Field = ({ label, placeholder, field, type = "text" }) => (
-    <div className="space-y-1">
-      <label className="text-xs font-medium text-fin-text-secondary">{label}</label>
-      <input
-        type={type}
-        value={form[field]}
-        onChange={set(field)}
-        placeholder={placeholder}
-        className="fin-input w-full text-sm h-9"
-      />
-    </div>
-  );
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        className="fin-card w-full max-w-md p-6 space-y-5"
-      >
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-bold text-fin-text-primary">Add Holding</h3>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-fin-muted text-fin-text-secondary">
-            <X size={16} />
-          </button>
-        </div>
-
-        {err && (
-          <div className="bg-fin-red/10 border border-fin-red/30 text-fin-red text-xs p-3 rounded-lg">{err}</div>
-        )}
-
-        <div className="grid grid-cols-2 gap-3">
-          <Field label="Symbol (e.g. RELIANCE)" placeholder="RELIANCE.NS" field="symbol" />
-          <Field label="Company Name"            placeholder="Reliance Industries" field="company_name" />
-          <Field label="Quantity"                placeholder="10" field="quantity" type="number" />
-          <Field label="Buy Price (₹)"           placeholder="2400.00" field="buy_price" type="number" />
-          <div className="col-span-2">
-            <Field label="Buy Date (optional)" placeholder="2024-01-15" field="buy_date" />
-          </div>
-        </div>
-
-        <div className="flex gap-3 pt-1">
-          <button onClick={onClose} className="fin-btn-ghost flex-1">Cancel</button>
-          <button
-            onClick={handleAdd}
-            disabled={submitting}
-            className="fin-btn-primary flex-1 flex items-center justify-center gap-2"
-          >
-            {submitting ? (
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            ) : (
-              <><Plus size={14} /> Add Holding</>
-            )}
-          </button>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
 
 /* ── Sort helper ───────────────────────────────────────────────── */
 function useSorted(items) {
@@ -134,7 +45,10 @@ function useSorted(items) {
 
 /* ── Main table ─────────────────────────────────────────────────── */
 export default function PortfolioTable() {
-  const { items, summary, removeItem } = usePortfolioStore();
+  // const { items, summary, removeItem } = usePortfolioStore();
+  const items = usePortfolioStore((s) => s.items);
+const summary = usePortfolioStore((s) => s.summary);
+const removeItem = usePortfolioStore((s) => s.removeItem);
   const [showAdd, setShowAdd] = useState(false);
   const [deleting, setDeleting] = useState(null);
   const navigate = useNavigate();
@@ -292,9 +206,11 @@ export default function PortfolioTable() {
       )}
 
       {/* Add modal */}
-      <AnimatePresence>
-        {showAdd && <AddModal onClose={() => setShowAdd(false)} />}
-      </AnimatePresence>
+      {showAdd && (
+  <AddHoldingModal
+    onClose={() => setShowAdd(false)}
+  />
+)}
     </>
   );
 }

@@ -43,9 +43,12 @@ function KpiCard({ label, value, sub, icon: Icon, accent, delay }) {
 
 /* ── Page ─────────────────────────────────────────────────────── */
 export default function Portfolio() {
-  const { summary, loading, fetchPortfolio } = usePortfolioStore();
-
-  useEffect(() => { fetchPortfolio(); }, []);
+  const summary = usePortfolioStore((s) => s.summary);
+const loading = usePortfolioStore((s) => s.loading);
+const fetchPortfolio = usePortfolioStore((s) => s.fetchPortfolio);
+  useEffect(() => {
+  fetchPortfolio();
+}, [fetchPortfolio]);
 
   const isUp = (summary?.total_pnl ?? 0) >= 0;
 

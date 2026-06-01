@@ -9,6 +9,7 @@ import {
   LineChart,
 } from "lucide-react";
 import useAuthStore from "../../store/authStore";
+import logo from "../../assets/findash-logo.png";
 
 const NAV_ITEMS = [
   { to: "/", icon: LayoutDashboard, label: "Dashboard" },
@@ -35,7 +36,7 @@ export default function Sidebar({ onClose }) {
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 py-5 border-b border-fin-border">
         <div className="w-8 h-8 rounded-lg bg-fin-blue flex items-center justify-center">
-          <LineChart size={16} className="text-white" />
+          <LineChart size={18} className="text-white" />
         </div>
         <span className="text-lg font-bold font-display text-fin-text-primary tracking-tight">
           Fin<span className="text-fin-blue">dash</span>
